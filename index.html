@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>What's Going On Outside?</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="./app/js/style.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css"
+        integrity="sha384-DyZ88mC6Up2uqS4h/KRgHuoeGwBcD4Ng9SiP4dIRy0EXTlnuz47vAwmeGwVChigm" crossorigin="anonymous">
+</head>
+
+<body
+    class="bg-gradient-to-r from-sky-500 to-indigo-500 dark:from-slate-700 dark:to-indigo-700 flex flex-col items-center font-nunito">
+    <header class="pt-10 px-16 mb-16 max-w-5xl w-full flex justify-between">
+        <a href="." class="text-2xl text-white font-extrabold tracking-wide">Weather?</a>
+        <a href="" class=""></a>
+    </header>
+    <main class="flex flex-col items-center px-16 max-w-5xl w-full">
+        <form class="main__form mb-8 flex flex-col items-center w-full">
+            <input type="text" name="city" placeholder="City"
+                class="form__city px-6 py-2 rounded-md shadow-md max-w-md w-full outline-none font-nunito">
+            <span class="form__flash opacity-0 text-blue-300 mt-2">
+                <i class="fas fa-exclamation-triangle mr-2"></i>
+                <span class="flash__message"></span>
+            </span>
+        </form>
+        <div class="main__weather flex flex-col items-center w-full max-w-md">
+            <h1 class="weather__city text-white flex items-center mb-1"></h1>
+            <h2 class="weather__date text-gray-300 mb-8"></h2>
+            <div class="weather__desc text-white text-2xl font-semibold mb-4"></div>
+            <div class="weather__temp text-7xl font-semibold text-white flex items-center"></div>
+            <div class="weather__minmax text-white text-xl font-semibold"></div>
+            <h2 class="weather__yest text-base font-semibold text-white mb-10"></h2>
+            <div
+                class="weather__details bg-indigo-300 dark:bg-indigo-600 text-white text-xl font-semibold rounded-3xl w-full max-w-xs px-10 py-8 flex justify-between items-center hidden">
+                <span class="details__humidity">
+
+                </span>
+                <span class="details__uvi">
+
+                </span>
+            </div>
+        </div>
+    </main>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="./app/js/app.js"></script>
+</body>
+
+</html>
