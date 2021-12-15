@@ -20,7 +20,7 @@ $(".header__form").submit(function (e) {
     }, 1000)
     $(".form__city").val() ? inputVal = $(".form__city").val() : inputVal = "Cape Town"; //Sets city to "Cape Town" if no input was recieved
     $(".form__city").val("");
-    $.getJSON(`http://api.openweathermap.org/geo/1.0/direct?q=${inputVal}&limit=1&appid=${apiKey}`)
+    $.getJSON(`https://api.openweathermap.org/geo/1.0/direct?q=${inputVal}&limit=1&appid=${apiKey}`)
         .done(function (data) {
             try {
                 if (!data.length) {
@@ -68,10 +68,10 @@ $(".header__form").submit(function (e) {
                     $(".weather__city").html(`<i class="fas fa-map-marker-alt mr-2"></i><span class="text-xl font-semibold">${cityName}</span>`);
                     $(".weather__date").html(`<span class="text-base font-semibold">${dateTime}</span>`);
                     $(".weather__desc").html(data.current.weather[0].description);
-                    $(".weather__temp").html(`<img src="http://openweathermap.org/img/wn/${data.current.weather[0].icon}@2x.png" alt="Weather icon">${Math.ceil(data.current.temp)}&deg;`);
+                    $(".weather__temp").html(`<img src="https://openweathermap.org/img/wn/${data.current.weather[0].icon}@2x.png" alt="Weather icon">${Math.ceil(data.current.temp)}&deg;`);
                     // $(".weather__minmax").html(`${Math.ceil(data.current.temp_max)}&deg; / ${Math.ceil(data.current.temp_min)}&deg; - Feels Like ${Math.ceil(data.current.feels_like)}&deg;`); // OneCall API does not include min and max
                     $(".weather__minmax").html(`Feels Like ${Math.ceil(data.current.feels_like)}&deg;`);
-                    $.getJSON(`http://api.openweathermap.org/data/2.5/onecall/timemachine?lat=${data.lat}&lon=${data.lon}&dt=${yesterdayTime}&appid=${apiKey}&units=metric`)
+                    $.getJSON(`https://api.openweathermap.org/data/2.5/onecall/timemachine?lat=${data.lat}&lon=${data.lon}&dt=${yesterdayTime}&appid=${apiKey}&units=metric`)
                         .done(function (data) {
                             $(".weather__yest").html(`Yesterday ${Math.ceil(data.current.temp)}&deg;`);
                         })
@@ -115,7 +115,7 @@ $(".header__locate").click(function (e) {
     try {
         navigator.geolocation.getCurrentPosition(showPosition);
         function showPosition(position) {
-            $.getJSON(`http://api.openweathermap.org/geo/1.0/reverse?lat=${position.coords.latitude}&lon=${position.coords.longitude}&limit=1&appid=${apiKey}`)
+            $.getJSON(`https://api.openweathermap.org/geo/1.0/reverse?lat=${position.coords.latitude}&lon=${position.coords.longitude}&limit=1&appid=${apiKey}`)
                 .done(function (data) {
                     $(".form__city").val(data[0].name);
                     $(".header__form").submit();
