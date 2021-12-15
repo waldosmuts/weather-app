@@ -38,7 +38,6 @@ $(".header__form").submit(function (e) {
             let yesterdayTime;
             $.getJSON(`https://api.openweathermap.org/data/2.5/onecall?lat=${data[0].lat}&lon=${data[0].lon}&exclude=daily,minutely,alerts&appid=${apiKey}&units=metric`)
                 .done(async function (data) {
-                    console.log(data)
                     const weekDays = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
                     const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
                     const calcTime = new Date((data.current.dt + (new Date(Date.now() * 1000).getTimezoneOffset() * 60) + data.timezone_offset) * 1000); //Calculates timezone of city compared to your timezone
