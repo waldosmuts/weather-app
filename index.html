@@ -14,35 +14,34 @@
 </head>
 
 <body
-    class="bg-gradient-to-r from-sky-500 to-indigo-500 dark:from-slate-700 dark:to-indigo-700 flex flex-col items-center font-nunito">
-    <header class="pt-10 px-16 mb-16 max-w-5xl w-full flex justify-between">
+    class="bg-gradient-to-r from-sky-300 to-indigo-500 dark:from-slate-700 dark:to-indigo-700 flex flex-col items-center font-nunito">
+    <header class="pt-10 px-16 mb-16 max-w-5xl w-full flex gap-10 items-center">
         <a href="." class="text-2xl text-white font-extrabold tracking-wide">Weather?</a>
-        <a href="" class=""></a>
-    </header>
-    <main class="flex flex-col items-center px-16 max-w-5xl w-full">
-        <form class="main__form mb-8 flex flex-col items-center w-full">
+        <form class="header__form flex flex-col items-center w-full relative">
             <input type="text" name="city" placeholder="City"
-                class="form__city px-6 py-2 rounded-md shadow-md max-w-md w-full outline-none font-nunito">
-            <span class="form__flash opacity-0 text-blue-300 mt-2">
+                class="form__city px-6 py-2 rounded-md shadow-md w-full outline-none font-nunito">
+            <span class="form__flash opacity-0 text-blue-400 absolute mt-2 right-6">
                 <i class="fas fa-exclamation-triangle mr-2"></i>
                 <span class="flash__message"></span>
             </span>
         </form>
-        <div class="main__weather flex flex-col items-center w-full max-w-md">
+        <button class="header__locate text-white text-2xl my-1"><i class="fas fa-search-location"></i></button>
+    </header>
+    <main class="flex flex-col items-center px-16 max-w-5xl w-full">
+        <div class="main__weather flex flex-col items-center w-full max-w-md pb-20">
             <h1 class="weather__city text-white flex items-center mb-1"></h1>
-            <h2 class="weather__date text-gray-300 mb-8"></h2>
-            <div class="weather__desc text-white text-2xl font-semibold mb-4"></div>
+            <h2 class="weather__date text-white opacity-70 mb-8"></h2>
+            <div class="weather__desc text-white text-2xl font-semibold capitalize"></div>
             <div class="weather__temp text-7xl font-semibold text-white flex items-center"></div>
             <div class="weather__minmax text-white text-xl font-semibold"></div>
-            <h2 class="weather__yest text-base font-semibold text-white mb-10"></h2>
+            <h2 class="weather__yest text-base font-semibold text-white opacity-70 mb-10"></h2>
             <div
-                class="weather__details bg-indigo-300 dark:bg-indigo-600 text-white text-xl font-semibold rounded-3xl w-full max-w-xs px-10 py-8 flex justify-between items-center hidden">
-                <span class="details__humidity">
-
-                </span>
-                <span class="details__uvi">
-
-                </span>
+                class="weather__details bg-indigo-300 dark:bg-indigo-700 text-white text-lg font-semibold rounded-3xl w-full max-w-xs px-10 py-4 flex justify-between items-center hidden shadow-md mb-6">
+                <span class="details__humidity"></span>
+                <span class="details__uvi"></span>
+            </div>
+            <div
+                class="weather__hourly bg-indigo-300 dark:bg-indigo-700 text-white rounded-3xl w-full max-w-xs px-10 py-4 grid grid-cols-5 items-center hidden shadow-md">
             </div>
         </div>
     </main>

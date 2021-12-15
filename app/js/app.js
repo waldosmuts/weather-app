@@ -2,9 +2,14 @@ const apiKey = "4d8fb5b93d4af21d66a2948710284366";
 
 $(document).ready(function () {
     $(".form__city").focus();
+    console.log(localStorage.getItem('cityName'))
+    if (localStorage.getItem('cityName')) {
+        $(".form__city").val(localStorage.getItem('cityName'));
+        $(".header__form").submit();
+    }
 });
 
-$(".main__form").submit(function (e) {
+$(".header__form").submit(function (e) {
     e.preventDefault();
     if ($(".form__city").hasClass("busy")) {
         return;
@@ -17,7 +22,19 @@ $(".main__form").submit(function (e) {
     $(".form__city").val("");
     $.getJSON(`http://api.openweathermap.org/geo/1.0/direct?q=${inputVal}&limit=1&appid=${apiKey}`)
         .done(function (data) {
+            try {
+                if (!data.length) {
+                    throw "Enter A Valid City Name";
+                }
+            } catch (error) {
+                $(".header__form").addClass("invalid");
+                $(".flash__message").text(error);
+                $(".form__flash").css("opacity", 1);
+                return;
+            }
             const cityName = `${data[0].name}, ${data[0].country}`;
+            localStorage.clear();
+            localStorage.setItem('cityName', cityName);
             let yesterdayTime;
             $.getJSON(`https://api.openweathermap.org/data/2.5/onecall?lat=${data[0].lat}&lon=${data[0].lon}&exclude=daily,minutely,alerts&appid=${apiKey}&units=metric`)
                 .done(async function (data) {
@@ -28,9 +45,9 @@ $(".main__form").submit(function (e) {
                     const dateTime = `${weekDays[calcTime.getDay()]} ${calcTime.getDate()} ${months[calcTime.getMonth()]} ${clockTime(calcTime.getHours())}:${clockTime(calcTime.getMinutes())}`;
                     let uvIndex = "";
                     yesterdayTime = data.current.dt - 86400;
-                    if ($(".main__form").hasClass("invalid")) {
+                    if ($(".header__form").hasClass("invalid")) {
                         $(".form__flash").css("opacity", 0);
-                        $(".main__form").removeClass("invalid");
+                        $(".header__form").removeClass("invalid");
                     }
                     if (data.current.dt < data.current.sunrise || data.current.dt > data.current.sunset) {
                         $("html").addClass("dark");
@@ -50,37 +67,40 @@ $(".main__form").submit(function (e) {
                     }
                     $(".weather__city").html(`<i class="fas fa-map-marker-alt mr-2"></i><span class="text-xl font-semibold">${cityName}</span>`);
                     $(".weather__date").html(`<span class="text-base font-semibold">${dateTime}</span>`);
-                    $(".weather__desc").html(data.current.weather[0].main);
+                    $(".weather__desc").html(data.current.weather[0].description);
                     $(".weather__temp").html(`<img src="http://openweathermap.org/img/wn/${data.current.weather[0].icon}@2x.png" alt="Weather icon">${Math.ceil(data.current.temp)}&deg;`);
-                    // $(".weather__minmax").html(`${Math.ceil(data.current.temp_max)}&deg; / ${Math.ceil(data.current.temp_min)}&deg; - Feels Like ${Math.ceil(data.current.feels_like)}&deg;`);
+                    // $(".weather__minmax").html(`${Math.ceil(data.current.temp_max)}&deg; / ${Math.ceil(data.current.temp_min)}&deg; - Feels Like ${Math.ceil(data.current.feels_like)}&deg;`); // OneCall API does not include min and max
                     $(".weather__minmax").html(`Feels Like ${Math.ceil(data.current.feels_like)}&deg;`);
                     $.getJSON(`http://api.openweathermap.org/data/2.5/onecall/timemachine?lat=${data.lat}&lon=${data.lon}&dt=${yesterdayTime}&appid=${apiKey}&units=metric`)
                         .done(function (data) {
                             $(".weather__yest").html(`Yesterday ${Math.ceil(data.current.temp)}&deg;`);
                         })
                         .fail(function () {
-                            $(".main__form").addClass("invalid");
+                            $(".header__form").addClass("invalid");
                             $(".flash__message").text("Could Not Fetch Yesterday's Temperature");
                             $(".form__flash").css("opacity", 1);
                         })
-                    $(".weather__details").removeClass("hidden")
+                    $(".weather__details").removeClass("hidden");
                     $(".details__humidity").html(`<i class="fas fa-tint mr-2"></i>${data.current.humidity}%`);
                     $(".details__uvi").html(`<i class="fas fa-sun mr-2"></i>${uvIndex}`);
+                    $(".weather__hourly").removeClass("hidden");
+                    $(".weather__hourly").empty();
+                    for (let i = 0; i < 5; i++) {
+                        $(".weather__hourly").append(`<div class="hourly__forecast flex flex-col items-center"><span class="text-base font-semibold">${new Date(data.hourly[i].dt * 1000).getHours()}</span><img src="http://openweathermap.org/img/wn/${data.hourly[i].weather[0].icon}@2x.png" alt=""><span class="font-semibold mb-2">${Math.ceil(data.hourly[i].temp)}&deg;</span><span class="text-sm font-semibold">${data.hourly[i].humidity}%</span></div>`);
+                    }
                 })
                 .fail(function () {
-                    $(".main__form").addClass("invalid");
+                    $(".header__form").addClass("invalid");
                     $(".flash__message").text("Enter A Valid City Name");
                     $(".form__flash").css("opacity", 1);
                 })
         })
         .fail(function () {
-            $(".main__form").addClass("invalid");
+            $(".header__form").addClass("invalid");
             $(".flash__message").text("Enter A Valid City Name");
             $(".form__flash").css("opacity", 1);
         })
 });
-
-
 
 function clockTime(num) {
     if (num.toString().length === 1) {
@@ -89,3 +109,26 @@ function clockTime(num) {
         return num;
     }
 }
+
+$(".header__locate").click(function (e) {
+    e.preventDefault();
+    try {
+        navigator.geolocation.getCurrentPosition(showPosition);
+        function showPosition(position) {
+            $.getJSON(`http://api.openweathermap.org/geo/1.0/reverse?lat=${position.coords.latitude}&lon=${position.coords.longitude}&limit=1&appid=${apiKey}`)
+                .done(function (data) {
+                    $(".form__city").val(data[0].name);
+                    $(".header__form").submit();
+                })
+                .fail(function () {
+                    $(".header__form").addClass("invalid");
+                    $(".flash__message").text("Unable To Fetch Location, Check Permissions");
+                    $(".form__flash").css("opacity", 1);
+                })
+        }
+    } catch (e) {
+        $(".header__form").addClass("invalid");
+        $(".flash__message").text("Unable To Fetch Location, Check Permissions");
+        $(".form__flash").css("opacity", 1);
+    }
+});
